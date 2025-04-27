@@ -2,7 +2,7 @@ import Database from 'better-sqlite3';
 import BetterSqlite3 from 'better-sqlite3';
 import * as bcrypt from 'bcrypt';
 
-const db: BetterSqlite3.Database = new Database('temp.db', { verbose: console.log });
+const db: BetterSqlite3.Database = new Database('db.sqlite', { verbose: console.log });
 
 export interface User {
 	id: number;
