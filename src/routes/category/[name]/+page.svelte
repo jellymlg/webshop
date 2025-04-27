@@ -6,6 +6,7 @@
 	export let data: {
 		title: string;
 		products: Product[];
+		images: string[];
 	};
 
 	let allProps: Map<string, string[]> = new Map();
@@ -20,10 +21,10 @@
 <ProductFilter properties={allProps} />
 
 <div>
-	{#each data.products as product (product.id)}
+	{#each data.products as product, i (product.id)}
 		<ProductCard
 			titleText={product.name}
-			imageUrl={product.image}
+			imageUrl={data.images[i]}
 			price={product.price}
 			productUrl={'/product/' + product.id}
 		/>

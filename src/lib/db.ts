@@ -43,53 +43,33 @@ export interface ProductType {
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS product_type (
-		id INTEGER PRIMARY KEY,
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT,
 		long_name TEXT
 	);
 `);
-db.exec(`INSERT INTO product_type(id, name, long_name) VALUES (1, 'CPU', 'Processzor');`);
-db.exec(`INSERT INTO product_type(id, name, long_name) VALUES (2, 'RAM', 'Memória');`);
-db.exec(`INSERT INTO product_type(id, name, long_name) VALUES (3, 'MOBO', 'Alaplap');`);
-db.exec(`INSERT INTO product_type(id, name, long_name) VALUES (4, 'CASE', 'Számítógép ház');`);
-
-export interface CPU extends Product {
-	clockMHZ: number;
-	cores: number;
-}
-
-export interface RAM extends Product {
-	speedMHZ: number;
-	sizeGB: number;
-}
-
-export interface MOBO extends Product {
-	size: string;
-}
-
-export interface CASE extends Product {
-	size: string;
-}
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CPU', 'Processzor');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('RAM', 'Memória');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('MOBO', 'Alaplap');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CASE', 'Számítógép ház');`);
 
 export interface Product {
-	id: string;
+	id: number;
 	type_id: number;
 	name: string;
 	price: number;
-	image: string;
 	vendor: string;
 	data: string;
 }
 
 db.exec(`
 	CREATE TABLE IF NOT EXISTS product (
-		id TEXT PRIMARY KEY,
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		type_id INTEGER,
 		name TEXT,
 		price INTEGER,
-		image TEXT,
 		vendor TEXT,
-      	data TEXT,
+		data TEXT,
 		FOREIGN KEY (type_id) REFERENCES product_type(id) ON DELETE CASCADE
 	);
 `);
@@ -173,21 +153,10 @@ export async function addToBasket(userId: number, productId: string): Promise<bo
 	return sql.run(userId, productId).changes > 0;
 }
 
-export async function getProductById<T extends Product>(productId: string): Promise<T | undefined> {
-	const sql = db.prepare<string, Product>(`SELECT * FROM products WHERE id = ?`);
+export async function getProductById(productId: string): Promise<Product | undefined> {
+	const sql = db.prepare<string, Product>(`SELECT * FROM product WHERE id = ?`);
 	const product = sql.get(productId);
-	switch (product?.type_id) {
-		case 0:
-			return { ...product, ...JSON.parse(product.data) } satisfies CPU;
-		case 1:
-			return { ...product, ...JSON.parse(product.data) } satisfies RAM;
-		case 2:
-			return { ...product, ...JSON.parse(product.data) } satisfies MOBO;
-		case 3:
-			return { ...product, ...JSON.parse(product.data) } satisfies CASE;
-		default:
-			return undefined;
-	}
+	return product ? { ...product, ...JSON.parse(product.data) } : undefined;
 }
 
 export async function getProductTypeFromName(name: string): Promise<ProductType | undefined> {
@@ -198,4 +167,27 @@ export async function getProductTypeFromName(name: string): Promise<ProductType 
 export async function getProductsInCategory(categoryId: number): Promise<Product[]> {
 	const sql = db.prepare<number, Product>(`SELECT * FROM product WHERE type_id = ?`);
 	return sql.all(categoryId);
+}
+
+export async function createCategory(name: string, long_name: string): Promise<boolean> {
+	const sql = db.prepare(`INSERT INTO product_type(name, long_name) VALUES (?, ?)`);
+	return sql.run(name, long_name).changes > 0;
+}
+
+export async function createProduct(
+	type_id: number,
+	name: string,
+	price: number,
+	vendor: string,
+	extra: string
+): Promise<number> {
+	const sql = db.prepare(
+		`INSERT INTO product(type_id, name, price, vendor, data) VALUES (?, ?, ?, ?, ?)`
+	);
+	return sql.run(type_id, name, price, vendor, extra).lastInsertRowid as number;
+}
+
+export async function getCategories(): Promise<ProductType[]> {
+	const sql = db.prepare<[], ProductType>(`SELECT * FROM product_type`);
+	return sql.all();
 }

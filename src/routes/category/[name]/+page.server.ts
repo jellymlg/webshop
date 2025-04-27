@@ -6,6 +6,7 @@ import {
 } from '$lib/db';
 import { redirect } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { getImageURLFromId } from '$lib/image';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const categoryName: string = params.name;
@@ -14,9 +15,11 @@ export const load: PageServerLoad = async ({ params }) => {
 	))!;
 	if (category) {
 		const prods: Product[] = await getProductsInCategory(category.id);
+		const images: string[] = prods.map((p) => getImageURLFromId(p.id));
 		return {
 			title: category.long_name,
-			products: prods
+			products: prods,
+			images: images
 		};
 	} else {
 		return redirect(303, '/');

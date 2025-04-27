@@ -1,14 +1,14 @@
 import { addToBasket, getProductById, type Product } from '$lib/db';
 import { redirect, type Actions } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
+import { getImageURLFromId } from '$lib/image';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const productId: string = params.id;
 	const product: Product = (await getProductById(productId))!;
 	return {
-		imageUrl: product.image,
-		titleText: product.name,
-		infos: new Map<string, string>(Object.entries(JSON.parse(product.data)))
+		imageUrl: getImageURLFromId(product.id),
+		product: product
 	};
 };
 
