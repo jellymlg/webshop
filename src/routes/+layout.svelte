@@ -6,8 +6,23 @@
 	export let data: LayoutData;
 </script>
 
-<div>
+<div id="container">
 	<Navbar isAdmin={data.isAdmin} />
-	<slot />
+	<section>
+		<slot />
+	</section>
 	<Footer />
 </div>
+
+<style>
+	#container {
+		display: flex;
+		flex-flow: column;
+		flex: 1;
+	}
+	section {
+		width: 75%;
+		flex: 1;
+		margin: auto;
+	}
+</style>
