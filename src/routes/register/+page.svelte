@@ -1,16 +1,34 @@
-<h1>Register page</h1>
 <form method="POST">
-	<label>
-		Username
-		<input name="username" type="text" />
-	</label>
-	<label>
-		Email
-		<input name="email" type="text" />
-	</label>
-	<label>
-		Password
-		<input name="password" type="password" />
-	</label>
+	<h1>Register page</h1>
+	<input name="email" type="text" placeholder="Email" />
+	<input name="username" type="text" placeholder="Username" />
+	<input name="password" type="password" placeholder="Password" />
 	<button>Register</button>
 </form>
+
+<style>
+	h1 {
+		font-size: 200%;
+		text-align: center;
+	}
+	form {
+		font-size: 120%;
+		display: flex;
+		align-items: center;
+		flex-flow: column;
+		flex: 1;
+		justify-content: center;
+	}
+	form > * {
+		margin: 16px;
+	}
+	button {
+		padding: 8px;
+		cursor: pointer;
+		font-size: 120%;
+	}
+	input {
+		padding: 8px;
+		font-size: 75%;
+	}
+</style>

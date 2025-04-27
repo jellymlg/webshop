@@ -21,6 +21,7 @@
 		flex: 1;
 	}
 	section {
+		display: flex;
 		width: 75%;
 		flex: 1;
 		margin: auto;
