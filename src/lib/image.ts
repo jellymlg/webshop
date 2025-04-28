@@ -7,7 +7,10 @@ cloudinary.config({
 });
 
 export async function uploadImage(image: string, id: number): Promise<UploadApiResponse> {
-	return cloudinary.uploader.upload(image, { public_id: 'image' + id });
+	return cloudinary.uploader.upload(image, {
+		public_id: 'image' + id,
+		invalidate: true
+	});
 }
 
 export function getImageURLFromId(id: number): string {

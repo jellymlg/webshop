@@ -2,20 +2,22 @@
 	import DebounceField from './DebounceField.svelte';
 
 	let {
-		properties
+		properties,
+		onSearch
 	}: {
 		properties: Map<string, string[]>;
+		onSearch: (searchTerm: string) => void;
 	} = $props();
 
-	let searchWord: string = $state('');
+	let _searchWord: string = $state('');
 
 	$effect(() => {
-		console.log(searchWord);
+		onSearch(_searchWord);
 	});
 </script>
 
 <div>
-	<DebounceField bind:text={searchWord} />
+	<DebounceField bind:text={_searchWord} placeholder="Search" />
 	{#each properties as property (property[0])}
 		<p>{property[0]}</p>
 		<ul>
@@ -25,3 +27,9 @@
 		</ul>
 	{/each}
 </div>
+
+<style>
+	ul {
+		list-style-type: none;
+	}
+</style>

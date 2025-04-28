@@ -48,10 +48,10 @@ db.exec(`
 		long_name TEXT
 	);
 `);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CPU', 'Processzor');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('RAM', 'Memória');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('MOBO', 'Alaplap');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CASE', 'Számítógép ház');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CPU', 'Processor');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('RAM', 'Memory');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('MOBO', 'Motherboard');`);
+db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CASE', 'Computer case');`);
 
 export interface Product {
 	id: number;
@@ -155,8 +155,7 @@ export async function addToBasket(userId: number, productId: string): Promise<bo
 
 export async function getProductById(productId: string): Promise<Product | undefined> {
 	const sql = db.prepare<string, Product>(`SELECT * FROM product WHERE id = ?`);
-	const product = sql.get(productId);
-	return product ? { ...product, ...JSON.parse(product.data) } : undefined;
+	return sql.get(productId);
 }
 
 export async function getProductTypeFromName(name: string): Promise<ProductType | undefined> {

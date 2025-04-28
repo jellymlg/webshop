@@ -1,8 +1,10 @@
 <script lang="ts">
 	let {
-		text = $bindable()
+		text = $bindable(),
+		placeholder
 	}: {
 		text: string;
+		placeholder: string;
 	} = $props();
 
 	let _text = $state(text);
@@ -15,4 +17,4 @@
 	}
 </script>
 
-<input type="text" bind:value={_text} oninput={() => input()} />
+<input type="text" {placeholder} bind:value={_text} oninput={() => input()} />
