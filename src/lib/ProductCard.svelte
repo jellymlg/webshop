@@ -35,6 +35,7 @@
 		height: fit-content;
 		display: flex;
 		flex-direction: column;
+		margin: 8px;
 	}
 	#card:hover {
 		background-color: rgb(185, 185, 185);
@@ -42,6 +43,7 @@
 	}
 	img {
 		width: 200px;
+		height: 200px;
 		padding: 8px;
 	}
 	#info {

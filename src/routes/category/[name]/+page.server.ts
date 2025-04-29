@@ -15,7 +15,7 @@ export const load: PageServerLoad = async ({ params }) => {
 	))!;
 	if (category) {
 		const prods: Product[] = await getProductsInCategory(category.id);
-		const images: string[] = prods.map((p) => getImageURLFromId(p.id));
+		const images: Map<number, string> = new Map(prods.map((p) => [p.id, getImageURLFromId(p.id)]));
 		return {
 			title: category.long_name,
 			products: prods,

@@ -11,6 +11,7 @@
 	{:else}
 		<a href="/settings">Account</a>
 	{/if}
+	<a href="/basket">Basket</a>
 	<a href="/register">Register</a>
 	<a href="/login">Login</a>
 	<a href="/logout" onclick={() => invalidateAll()}>Logout</a>

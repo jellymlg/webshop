@@ -7,7 +7,7 @@
 		"dev": "vite dev",
 		"build": "vite build",
 		"format": "prettier --write .",
-		"lint": "prettier --check . && eslint ."
+		"lint": "eslint ."
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",

@@ -153,6 +153,18 @@ export async function addToBasket(userId: number, productId: string): Promise<bo
 	return sql.run(userId, productId).changes > 0;
 }
 
+export async function removeFromBasket(userId: number, productId: string): Promise<boolean> {
+	const sql = db.prepare(`DELETE FROM basket WHERE user_id = ? AND product_id = ?`);
+	return sql.run(userId, productId).changes > 0;
+}
+
+export async function getBasketForUser(userId: number): Promise<Product[]> {
+	const sql = db.prepare<number, Product>(
+		`SELECT p.* FROM basket b INNER JOIN product p ON b.product_id = p.id WHERE user_id = ?`
+	);
+	return sql.all(userId);
+}
+
 export async function getProductById(productId: string): Promise<Product | undefined> {
 	const sql = db.prepare<string, Product>(`SELECT * FROM product WHERE id = ?`);
 	return sql.get(productId);
