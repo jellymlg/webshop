@@ -18,10 +18,10 @@
 
 <div>
 	<DebounceField bind:text={_searchWord} placeholder="Search" />
-	{#each properties as property (property[0])}
+	{#each properties as property (property)}
 		<p>{property[0]}</p>
 		<ul>
-			{#each property[1] as item (item)}
+			{#each [...new Set(property[1])] as item (item)}
 				<li>{item}</li>
 			{/each}
 		</ul>

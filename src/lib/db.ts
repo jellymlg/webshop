@@ -48,10 +48,6 @@ db.exec(`
 		long_name TEXT
 	);
 `);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CPU', 'Processor');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('RAM', 'Memory');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('MOBO', 'Motherboard');`);
-db.exec(`INSERT INTO product_type(name, long_name) VALUES ('CASE', 'Computer case');`);
 
 export interface Product {
 	id: number;
@@ -73,6 +69,13 @@ db.exec(`
 		FOREIGN KEY (type_id) REFERENCES product_type(id) ON DELETE CASCADE
 	);
 `);
+
+const productTypeCount: number = db
+	.prepare<[], { 'COUNT(*)': number }>('SELECT COUNT(*) FROM product_type')
+	.get()!['COUNT(*)'];
+if (productTypeCount == 0) {
+	loadTestData();
+}
 
 export interface Basket {
 	id: number;
@@ -201,4 +204,25 @@ export async function createProduct(
 export async function getCategories(): Promise<ProductType[]> {
 	const sql = db.prepare<[], ProductType>(`SELECT * FROM product_type`);
 	return sql.all();
+}
+
+function loadTestData() {
+	db.exec(`
+		INSERT INTO product_type(name, long_name) VALUES 
+			('CPU', 'Processor'),
+			('RAM', 'Memory'),
+			('MOBO', 'Motherboard'),
+			('CASE', 'Computer case');
+	`);
+	db.exec(`
+		INSERT INTO product(type_id, name, price, vendor, data) VALUES
+			(1, 'Ryzen 5 3600', 199, 'AMD', '${JSON.stringify({ Clock: '3.6GHz', Socket: 'AM4' })}'),
+			(1, 'Intel Core i5-12400F', 179, 'Intel', '${JSON.stringify({ Clock: '2.5GHz', Socket: 'LGA1700' })}'),
+			(2, 'Corsair Vengeance LPX 16GB', 79, 'Corsair', '${JSON.stringify({ Capacity: '16GB', Speed: '3200MHz', Type: 'DDR4' })}'),
+			(2, 'G.Skill Trident Z RGB 32GB', 139, 'G.Skill', '${JSON.stringify({ Capacity: '32GB', Speed: '3600MHz', Type: 'DDR4' })}'),
+			(3, 'MSI B450 Tomahawk', 109, 'MSI', '${JSON.stringify({ Socket: 'AM4', FormFactor: 'ATX', Chipset: 'B450' })}'),
+			(3, 'ASUS ROG Strix Z790-E', 329, 'ASUS', '${JSON.stringify({ Socket: 'LGA1700', FormFactor: 'ATX', Chipset: 'Z790' })}'),
+			(4, 'NZXT H510', 69, 'NZXT', '${JSON.stringify({ Size: 'Mid Tower', Material: 'Steel', Color: 'White' })}'),
+			(4, 'Fractal Design Meshify C', 89, 'Fractal', '${JSON.stringify({ Size: 'Mid Tower', Material: 'Tempered Glass', Color: 'Black' })}');
+	`);
 }

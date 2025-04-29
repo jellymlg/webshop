@@ -1,38 +1,39 @@
-# sv
+# Teszt webshop
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+## Célja
 
-## Creating a project
+Egy egyszerű (hardware) webshop felhasználó és termék kezeléssel.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Megvalósítása
 
-```bash
-# create a new project in the current directory
-npx sv create
+Svelte, BetterSQLite3, Cloudinary
 
-# create a new project in my-app
-npx sv create my-app
-```
+## Kódbázis szerkezetének magyarázata
 
-## Developing
+- /lib: komponensek
+- /lib/db.ts: adatbázis funkciók
+- /lib/image.ts: külső kép tároló API
+- /routes/\*: oldalak
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## APIk leírása
 
-```bash
-npm run dev
+- /admin/newCategory: új kategória létrehozása
+- /admin/newProduct: új termék létrehozása
+- /basket: törlés kosárból
+- /login: bejelentkezés
+- /logout: kijelentkezés
+- /product/[id]: kosárhoz adás
+- /register: regisztráció
+- /settings: felhasználói beállítások [TODO]
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+## Tárolt adatok leírása
 
-## Building
+- TABLE users: felhasználók
+- TABLE sessions: bejelentkezési session-ök
+- TABLE product_type: termék kategóriák
+- TABLE product: termékek
+- TABLE basket: felhasználók kosarai
 
-To create a production version of your app:
+## Kommunikáció módja
 
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+Egyszerű POST hívások Formok-ból.
